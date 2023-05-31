@@ -6,9 +6,10 @@ import java.util.Map;
 public class Logic {
 
     /* Creates one map of files. */
-    public static Map<String, Long> listFiles() {
+    public static Map<String, Long> listFiles(boolean recursion) {
         Map<String, Long> filesMap;
-        filesMap = FileOp.readFiles("");
+        filesMap = FileOp.readFiles("", recursion);
+
 
         return filesMap;
     }

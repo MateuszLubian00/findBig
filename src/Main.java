@@ -4,11 +4,11 @@
 public class Main {
 
     /* Search recursively through subdirectories. */
-    private boolean recursion = true;
+    private static boolean recursion = true;
     /* Which order to use when printing the file list. */
-    private boolean order = true;
+    private static boolean order = true;
     /* Given size to search for. */
-    private int targetSize;
+    private static int targetSize;
 
     public static void main(String[] args) {
 
@@ -16,7 +16,7 @@ public class Main {
             parseCommands(args);
         }
 
-        Logic.listFiles();
+        Logic.listFiles(recursion);
 
     }
 
