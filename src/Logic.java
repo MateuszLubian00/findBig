@@ -2,6 +2,14 @@
 *
 *
 */
-import java.util.List;
+import java.util.Map;
 public class Logic {
+
+    /* Creates one map of files. */
+    public static Map<String, Long> listFiles() {
+        Map<String, Long> filesMap;
+        filesMap = FileOp.readFiles("");
+
+        return filesMap;
+    }
 }

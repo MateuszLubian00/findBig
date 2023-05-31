@@ -2,7 +2,7 @@
 
 A simple program that lets you search for the biggest or smallest files in a given directory. Also supports searching for a file with a particular size.
 
-## Useage
+## Usage
 
 By default the program will look for all files, including in subdirectories, within the current working directory and output a list of files with decreasing order of size. The output might be altered using arguments:
 

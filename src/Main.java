@@ -16,7 +16,7 @@ public class Main {
             parseCommands(args);
         }
 
-        System.out.printf("Hello and welcome!");
+        Logic.listFiles();
 
     }
 
