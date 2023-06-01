@@ -6,7 +6,7 @@ public class Main {
     /* Search recursively through subdirectories. */
     private static boolean recursion = true;
     /* Which order to use when printing the file list. */
-    private static boolean order = true;
+    private static boolean descOrder = true;
     /* Given size to search for. */
     private static int targetSize;
 
@@ -16,7 +16,7 @@ public class Main {
             parseCommands(args);
         }
 
-        Logic.listFiles(recursion);
+        Logic.listFiles(recursion, descOrder);
 
     }
 

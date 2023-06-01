@@ -6,8 +6,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class FileOp {
     /** The current working directory. */
@@ -18,6 +17,8 @@ public class FileOp {
         File newDir = null;
 
         try {
+            // If this is not an absolute path, java should automatically add the current working directory
+            // each time a file with this path is referenced.
             newDir = new File(path);
         } catch(InvalidPathException e) {
             System.out.print("The given path is not valid, exiting.");
@@ -35,7 +36,7 @@ public class FileOp {
     /* Reads the list of files in a dir and returns map of filenames by size.
     *  Additionally, recursively goes over subdirectories.
     */
-    public static Map<String, Long> readFiles(String path, boolean recursive) {
+    public static TreeSet<Map.Entry<String, Long>> readFiles(String path, boolean recursive, boolean order) {
         File selectedDir = new File(CWD, path);
 
         if (!selectedDir.exists()) {
@@ -45,10 +46,19 @@ public class FileOp {
 
         File[] files = selectedDir.listFiles();
         if (files.length == 0) {
-            return new TreeMap<>();
+            // Added for compatibility when adding files recursively.
+            return new TreeSet<Map.Entry<String, Long>>();
         }
 
-        Map<String, Long> filesMap = new TreeMap<>(){};
+        TreeSet<Map.Entry<String, Long>> filesMap = new TreeSet<>(new Comparator<Map.Entry<String, Long>>() {
+            @Override
+            public int compare(Map.Entry<String, Long> e1, Map.Entry<String, Long> e2) {
+                int valueComparison = e1.getValue().compareTo(e2.getValue());
+                if (order) {valueComparison = -valueComparison;}
+                return valueComparison == 0 ? e1.getKey().compareTo(e2.getKey()) : valueComparison;
+            }
+        });
+
         long size;
         Path currPath;
 
@@ -56,13 +66,13 @@ public class FileOp {
             for (File file : files) {
                 if (file.isDirectory()) {
                     if (recursive) {
-                        filesMap.putAll(readFiles(path + "/" + file.getName(), true));
+                        filesMap.addAll(readFiles(path + File.separator + file.getName(), true, order));
                     }
                     continue;
                 }
                 currPath = file.toPath();
                 size = Files.size(currPath);
-                filesMap.put(path + "/" + file.getName(), size);
+                filesMap.add(new AbstractMap.SimpleEntry<>(path + File.separator + file.getName(), size));
             }
         } catch (IOException e) {
             System.out.print("There was an error when reading file, exiting.");
