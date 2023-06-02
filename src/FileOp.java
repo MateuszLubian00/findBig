@@ -14,22 +14,24 @@ public class FileOp {
 
     /* Checks if the given path is valid, and set it to CWD. */
     public static void newCWD(String path) {
-        File newDir = null;
+        File absolute = null;
+        File relative = null;
 
         try {
-            // If this is not an absolute path, java should automatically add the current working directory
-            // each time a file with this path is referenced.
-            newDir = new File(path);
+            absolute = new File(path);
+            relative = new File(CWD, path);
         } catch(InvalidPathException e) {
             System.out.print("The given path is not valid, exiting.");
             System.exit(0);
         }
 
-        if (newDir.exists() && newDir.isDirectory()) {
-            CWD = newDir;
+        if (absolute.exists() && absolute.isDirectory()) {
+            CWD = absolute;
+        } else if (relative.exists() && relative.isDirectory()) {
+            CWD = relative;
         } else {
-            System.out.print("The given path is not a valid directory, exiting.");
-            System.exit(0);
+                System.out.print("The given path is not a valid directory, exiting.");
+                System.exit(0);
         }
     }
 

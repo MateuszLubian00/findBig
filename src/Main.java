@@ -22,7 +22,31 @@ public class Main {
 
     }
 
+    /* Checks arguments one by one and sets the appropriate variables. */
     private static void parseCommands(String[] commands){
-        
+        for (String option: commands) {
+            if (option.startsWith("-")) {
+                String letter = option.substring(1, 2);
+                switch (letter) {
+                    case "n":
+                        recursion = false;
+                        break;
+                    case "s":
+                        descOrder = false;
+                        break;
+                    case "b":
+                        convert = false;
+                        break;
+                    case "f":
+                        break;
+                    default:
+                        System.out.printf("Unrecognized option %s, exiting.", option);
+                        System.exit(0);
+                }
+            } else {
+                // Assume the input is for a different PATH
+                FileOp.newCWD(option);
+            }
+        }
     }
 }
