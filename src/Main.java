@@ -7,6 +7,8 @@ public class Main {
     private static boolean recursion = true;
     /* Which order to use when printing the file list. */
     private static boolean descOrder = true;
+    /* Should the units of larger files be converted from B to KB etc. */
+    private static boolean convert = true;
     /* Given size to search for. */
     private static int targetSize;
 
@@ -16,7 +18,7 @@ public class Main {
             parseCommands(args);
         }
 
-        Logic.listFiles(recursion, descOrder);
+        Logic.listFiles(recursion, descOrder, convert);
 
     }
 

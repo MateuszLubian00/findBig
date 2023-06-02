@@ -11,21 +11,21 @@ public class Logic {
     private static final String[] unitsNiB = {"B", "KiB", "MiB", "GiB", "TiB"};
 
     /* Creates one map of files. */
-    public static TreeSet<Map.Entry<String, Long>> listFiles(boolean recursion, boolean descOrder) {
+    public static TreeSet<Map.Entry<String, Long>> listFiles(boolean recursion, boolean descOrder, boolean convert) {
         TreeSet<Map.Entry<String, Long>> filesMap;
         filesMap = FileOp.readFiles("", recursion, descOrder);
 
-        printFiles(filesMap);
+        printFiles(filesMap, convert);
         return filesMap;
     }
 
     /* Print out the list of files. */
-    private static void printFiles(TreeSet<Map.Entry<String, Long>> filesMap) {
+    private static void printFiles(TreeSet<Map.Entry<String, Long>> filesMap, boolean convert) {
         int unit = 0;
         float size;
         for (Map.Entry file : filesMap) {
             size = Float.parseFloat(file.getValue().toString());
-            while (size >= 1024) {
+            while (convert && size >= 1024) {
                 unit++;
                 size = size / 1024;
             }
