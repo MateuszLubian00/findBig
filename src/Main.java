@@ -9,6 +9,8 @@ public class Main {
     private static boolean descOrder = true;
     /* Should the units of larger files be converted from B to KB etc. */
     private static boolean convert = true;
+    /* Show hidden files and enter hidden directories. */
+    private static boolean showHidden = false;
     /* Given size to search for. */
     private static int targetSize;
 
@@ -18,7 +20,7 @@ public class Main {
             parseCommands(args);
         }
 
-        Logic.listFiles(recursion, descOrder, convert);
+        Logic.listFiles(recursion, descOrder, convert, showHidden);
 
     }
 
@@ -36,6 +38,9 @@ public class Main {
                         break;
                     case "b":
                         convert = false;
+                        break;
+                    case "h":
+                        showHidden = true;
                         break;
                     case "f":
                         // TODO: search for a size

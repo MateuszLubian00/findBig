@@ -11,9 +11,9 @@ public class Logic {
     private static final String[] unitsNiB = {"B", "KiB", "MiB", "GiB", "TiB"};
 
     /* Creates one map of files. */
-    public static TreeSet<Map.Entry<String, Long>> listFiles(boolean recursion, boolean descOrder, boolean convert) {
+    public static TreeSet<Map.Entry<String, Long>> listFiles(boolean recursion, boolean descOrder, boolean convert, boolean showHidden) {
         TreeSet<Map.Entry<String, Long>> filesMap;
-        filesMap = FileOp.readFiles("", recursion, descOrder);
+        filesMap = FileOp.readFiles("", recursion, descOrder, showHidden);
 
         printFiles(filesMap, convert);
         return filesMap;

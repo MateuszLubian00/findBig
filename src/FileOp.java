@@ -4,6 +4,7 @@
 */
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
@@ -38,14 +39,17 @@ public class FileOp {
     /* Reads the list of files in a dir and returns map of filenames by size.
     *  Additionally, recursively goes over subdirectories.
     */
-    public static TreeSet<Map.Entry<String, Long>> readFiles(String path, boolean recursive, boolean order) {
+    public static TreeSet<Map.Entry<String, Long>> readFiles(String path, boolean recursive, boolean order, boolean showHidden) {
         File selectedDir = new File(CWD, path);
         if (!selectedDir.exists()) {
             System.out.printf("The given directory %s doesn't exist, exiting.", path);
             System.exit(0);
         }
 
-        File[] files = selectedDir.listFiles();
+        FilenameFilter filter = (File dir, String name) -> !name.startsWith(".");
+        if (showHidden) {filter = null;};
+
+        File[] files = selectedDir.listFiles(filter);
         if (files != null && files.length == 0) {
             // Added for compatibility when adding files recursively.
             return makeSet(order);
@@ -60,7 +64,7 @@ public class FileOp {
             for (File file : files) {
                 if (file.isDirectory()) {
                     if (recursive) {
-                        filesMap.addAll(readFiles(path + File.separator + file.getName(), true, order));
+                        filesMap.addAll(readFiles(path + File.separator + file.getName(), true, order, showHidden));
                     }
                     continue;
                 }

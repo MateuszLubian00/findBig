@@ -11,3 +11,4 @@ By default the program will look for all files, including in subdirectories, wit
 3. `-s` - output smallest files first.
 4. `-f=SIZE` - output only files that are close to the given size (in bytes).
 5. `-b` - show the output in Bytes.
+6. `-h` - output hidden files, as well as search for files in hidden directories.
