@@ -12,7 +12,7 @@ public class FileOp {
     /** The current working directory. */
     public static File CWD = new File(System.getProperty("user.dir"));
 
-    /* Checks if the given path is valid, and set it to CWD. */
+    /* Check if the given path is valid, and set it to CWD. */
     public static void newCWD(String path) {
         File absolute = null;
         File relative = null;
@@ -40,29 +40,21 @@ public class FileOp {
     */
     public static TreeSet<Map.Entry<String, Long>> readFiles(String path, boolean recursive, boolean order) {
         File selectedDir = new File(CWD, path);
-
         if (!selectedDir.exists()) {
             System.out.printf("The given directory %s doesn't exist, exiting.", path);
             System.exit(0);
         }
 
         File[] files = selectedDir.listFiles();
-        if (files.length == 0) {
+        if (files != null && files.length == 0) {
             // Added for compatibility when adding files recursively.
-            return new TreeSet<Map.Entry<String, Long>>();
+            return makeSet(order);
         }
 
-        TreeSet<Map.Entry<String, Long>> filesMap = new TreeSet<>(new Comparator<Map.Entry<String, Long>>() {
-            @Override
-            public int compare(Map.Entry<String, Long> e1, Map.Entry<String, Long> e2) {
-                int valueComparison = e1.getValue().compareTo(e2.getValue());
-                if (order) {valueComparison = -valueComparison;}
-                return valueComparison == 0 ? e1.getKey().compareTo(e2.getKey()) : valueComparison;
-            }
-        });
+        TreeSet<Map.Entry<String, Long>> filesMap = makeSet(order);
 
         long size;
-        Path currPath;
+        Path currPath = null;
 
         try {
             for (File file : files) {
@@ -77,10 +69,26 @@ public class FileOp {
                 filesMap.add(new AbstractMap.SimpleEntry<>(path + File.separator + file.getName(), size));
             }
         } catch (IOException e) {
-            System.out.print("There was an error when reading file, exiting.");
+            System.out.printf("There was an error when reading file %s, exiting.", currPath);
             System.exit(0);
         }
 
         return filesMap;
+    }
+
+    /* Helper method that returns an empty TreeSet with modified constructor to allow for
+    *  value-based ordering.
+    */
+    private static TreeSet<Map.Entry<String, Long>> makeSet(boolean order){
+        TreeSet<Map.Entry<String, Long>> tree = new TreeSet<>(new Comparator<Map.Entry<String, Long>>() {
+            @Override
+            public int compare(Map.Entry<String, Long> e1, Map.Entry<String, Long> e2) {
+                int valueComparison = e1.getValue().compareTo(e2.getValue());
+                if (order) {valueComparison = -valueComparison;}
+                return valueComparison == 0 ? e1.getKey().compareTo(e2.getKey()) : valueComparison;
+            }
+        });
+
+    return tree;
     }
 }

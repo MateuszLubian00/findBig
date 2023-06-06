@@ -38,6 +38,7 @@ public class Main {
                         convert = false;
                         break;
                     case "f":
+                        // TODO: search for a size
                         break;
                     default:
                         System.out.printf("Unrecognized option %s, exiting.", option);
