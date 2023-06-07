@@ -12,7 +12,7 @@ public class Main {
     /* Show hidden files and enter hidden directories. */
     private static boolean showHidden = false;
     /* Given size to search for. */
-    private static long targetSize;
+    private static String targetSize = null;
 
     public static void main(String[] args) {
 
@@ -20,7 +20,7 @@ public class Main {
             parseCommands(args);
         }
 
-        Logic.listFiles(recursion, descOrder, convert, showHidden);
+        Logic.listFiles(recursion, descOrder, convert, showHidden, targetSize);
 
     }
 
@@ -43,7 +43,7 @@ public class Main {
                         showHidden = true;
                         break;
                     case "f":
-                        // TODO: search for a size
+                        targetSize = option.substring(3);
                         break;
                     default:
                         System.out.printf("Unrecognized option %s, exiting.", option);

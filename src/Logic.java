@@ -11,9 +11,14 @@ public class Logic {
     private static final String[] unitsNiB = {"B", "KiB", "MiB", "GiB", "TiB"};
 
     /* Creates one map of files. */
-    public static TreeSet<Map.Entry<String, Long>> listFiles(boolean recursion, boolean descOrder, boolean convert, boolean showHidden) {
+    public static TreeSet<Map.Entry<String, Long>> listFiles(boolean recursion, boolean descOrder, boolean convert, boolean showHidden, String targetSize) {
         TreeSet<Map.Entry<String, Long>> filesMap;
         filesMap = FileOp.readFiles("", recursion, descOrder, showHidden);
+
+        if (targetSize != null) {
+           Long bytes = convertToBytes(targetSize);
+           filesMap = closeToSize(filesMap, bytes);
+        }
 
         printFiles(filesMap, convert);
         return filesMap;
@@ -41,6 +46,45 @@ public class Logic {
     public static TreeSet<Map.Entry<String, Long>> closeToSize(TreeSet<Map.Entry<String, Long>> filesMap, Long target) {
 
         return null;
+    }
+
+    /* Converts from large size to the lowest - bytes. */
+    private static Long convertToBytes(String size){
+        // Don't trust user with correct capitalization
+        size = size.toLowerCase();
+        String targetUnit;
+        String[] units;
+        Long conversion;
+
+        if (size.charAt(size.length() -2) == 'i') {
+            units = unitsNiB.clone();
+            conversion = 1000L;
+            targetUnit = size.substring(size.length() - 3);
+        } else {
+            units = unitsNB.clone();
+            conversion = 1024L;
+            targetUnit = size.substring(size.length() - 2);
+        }
+
+        Long result = Long.parseLong(size.substring(0, size.length() - targetUnit.length()));
+        // Making sure the target unit was found.
+        boolean found = false;
+
+        for (String unit: units) {
+            unit = unit.toLowerCase();
+            if (unit.equals(targetUnit)) {
+                found = true;
+                break;
+            }
+            result = result * conversion;
+        }
+
+        if (!found) {
+            System.out.printf("The given unit of size \"%s\" is not recognized, exiting.", targetUnit);
+            System.exit(0);
+        }
+
+        return result;
     }
 
 }
