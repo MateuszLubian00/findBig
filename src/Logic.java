@@ -57,11 +57,11 @@ public class Logic {
         Long conversion;
 
         if (size.charAt(size.length() -2) == 'i') {
-            units = unitsNiB.clone();
+            units = unitsNiB;
             conversion = 1000L;
             targetUnit = size.substring(size.length() - 3);
         } else {
-            units = unitsNB.clone();
+            units = unitsNB;
             conversion = 1024L;
             targetUnit = size.substring(size.length() - 2);
         }
