@@ -12,7 +12,7 @@ public class Main {
     /* Show hidden files and enter hidden directories. */
     private static boolean showHidden = false;
     /* Given size to search for. */
-    private static int targetSize;
+    private static long targetSize;
 
     public static void main(String[] args) {
 

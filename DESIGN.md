@@ -10,7 +10,7 @@ This is the starting point for program. It parses the given arguments and calls 
 - `private static boolean descOrder = true` - should the order of files be descending (by size).
 - `private static boolean convert = true` - if the file exceedes size of 1024 B, should the program convert to larger units.
 - `private static boolean showHidden = false` should the program look for files and output files that start with a dot.
-- `private static int targetSize` - if this variable is initialized, perform search and output only files that are close to the given size.
+- `private static long targetSize` - if this variable is initialized, perform search and output only files that are close to the given size.
 
 ### Methods
 

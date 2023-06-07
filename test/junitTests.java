@@ -105,4 +105,60 @@ public class junitTests {
         result.remove(first);
         Assert.assertEquals(second, result.first());
     }
+
+    //
+    // Test cases for searching size
+    //
+
+    @Test
+    /* When searching for a file of given size, the first result should be the one closest to target. */
+    public void findExactSize() {
+        TreeSet<Map.Entry<String, Long>> result = FileOp.readFiles("\\test\\test files\\dir1", false, true, false);
+        result = Logic.closeToSize(result, 10L);
+        AbstractMap.SimpleEntry<String, Long> first = new AbstractMap.SimpleEntry<>("\\test\\test files\\dir1\\10.txt", 10L);
+
+        Assert.assertEquals(first, result.first());
+    }
+
+    @Test
+    /* When searching by size and finding two exact size files matching target, both of them should be present and at the top.
+    *  Order is irrelevant.
+    */
+    public void findTwoFilesExactSize() {
+        TreeSet<Map.Entry<String, Long>> result = FileOp.readFiles("\\test\\test files", false, true, false);
+        result = Logic.closeToSize(result, 16L);
+        AbstractMap.SimpleEntry<String, Long> first = new AbstractMap.SimpleEntry<>("\\test\\test files\\16.txt", 16L);
+        AbstractMap.SimpleEntry<String, Long> second = new AbstractMap.SimpleEntry<>("\\test\\test files\\dir1\\16.txt", 16L);
+
+        AbstractMap.Entry<String, Long> firstResult = result.first();
+        result.remove(firstResult);
+        AbstractMap.Entry<String, Long> secondResult = result.first();
+
+        result.clear();
+        result.add(firstResult);
+        result.add(secondResult);
+
+        Assert.assertTrue(result.contains(first));
+        Assert.assertTrue(result.contains(second));
+    }
+
+    @Test
+    /* Search by size, but miss the exact size mark on a file. */
+    public void findCloseSize() {
+        TreeSet<Map.Entry<String, Long>> result = FileOp.readFiles("\\test\\test files", false, true, false);
+        result = Logic.closeToSize(result, 7L);
+        AbstractMap.SimpleEntry<String, Long> first = new AbstractMap.SimpleEntry<>("\\test\\test files\\8.txt", 8L);
+
+        Assert.assertEquals(first, result.first());
+    }
+
+    @Test
+    /* Don't output files when the size gap is too large. */
+    public void findOutOfRange() {
+        TreeSet<Map.Entry<String, Long>> result = FileOp.readFiles("\\test\\test files", false, true, false);
+        // One Gigabyte
+        result = Logic.closeToSize(result, 1024 * 1024 * 1024L);
+
+        Assert.assertEquals(new TreeSet<Map.Entry<String, Long>>(), result);
+    }
 }

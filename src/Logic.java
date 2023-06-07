@@ -34,4 +34,13 @@ public class Logic {
             unit = 0;
         }
     }
+
+    /* Trim the list and order elements to better fit the target search.
+    *  Note: ordering given at start of the program is ignored.
+    */
+    public static TreeSet<Map.Entry<String, Long>> closeToSize(TreeSet<Map.Entry<String, Long>> filesMap, Long target) {
+
+        return null;
+    }
+
 }
