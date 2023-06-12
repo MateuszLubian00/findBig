@@ -47,7 +47,7 @@ public class FileOp {
         }
 
         FilenameFilter filter = (File dir, String name) -> !name.startsWith(".");
-        if (showHidden) {filter = null;};
+        if (showHidden) {filter = null;}
 
         File[] files = selectedDir.listFiles(filter);
         if (files != null && files.length == 0) {

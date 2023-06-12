@@ -11,7 +11,7 @@ public class Logic {
     private static final String[] unitsNiB = {"B", "KiB", "MiB", "GiB", "TiB"};
 
     /* Creates one map of files. */
-    public static TreeSet<Map.Entry<String, Long>> listFiles(boolean recursion, boolean descOrder, boolean convert, boolean showHidden, String targetSize) {
+    public static void listFiles(boolean recursion, boolean descOrder, boolean convert, boolean showHidden, String targetSize) {
         TreeSet<Map.Entry<String, Long>> filesMap;
         filesMap = FileOp.readFiles("", recursion, descOrder, showHidden);
 
@@ -21,14 +21,13 @@ public class Logic {
         }
 
         printFiles(filesMap, convert);
-        return filesMap;
     }
 
     /* Print out the list of files. */
     private static void printFiles(TreeSet<Map.Entry<String, Long>> filesMap, boolean convert) {
         int unit = 0;
         float size;
-        for (Map.Entry file : filesMap) {
+        for (Map.Entry<String, Long> file : filesMap) {
             size = Float.parseFloat(file.getValue().toString());
             while (convert && size >= 1024) {
                 unit++;
@@ -44,17 +43,41 @@ public class Logic {
     *  Note: ordering given at start of the program is ignored.
     */
     public static TreeSet<Map.Entry<String, Long>> closeToSize(TreeSet<Map.Entry<String, Long>> filesMap, Long target) {
+        TreeSet<Map.Entry<String, Long>> tree = new TreeSet<>(new Comparator<Map.Entry<String, Long>>() {
+            @Override
+            public int compare(Map.Entry<String, Long> e1, Map.Entry<String, Long> e2) {
+                // Smaller distance goes to the right branch
+                // Note: returning 0 discards entry, don't do that
+                long dist1 = Math.abs(target - e1.getValue());
+                long dist2 = Math.abs(target - e2.getValue());
 
-        return null;
+                if (dist1 < dist2) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
+
+        long lowerBound = (long) (target * 0.8);
+        long upperBound = (long) (target * 1.2);
+
+        for (Map.Entry<String, Long> entry : filesMap) {
+            if (entry.getValue() >= lowerBound && entry.getValue() <= upperBound) {
+                tree.add(entry);
+            }
+        }
+
+        return tree;
     }
 
-    /* Converts from large size to the lowest - bytes. */
+    /* Converts from large size to the lowest - Bytes. */
     private static Long convertToBytes(String size){
         // Don't trust user with correct capitalization
         size = size.toLowerCase();
         String targetUnit;
         String[] units;
-        Long conversion;
+        long conversion;
 
         if (size.length() == 1 || size.charAt(size.length() - 1) != 'b') {
             // Special case if it is a single number or the units were not provided
@@ -74,7 +97,7 @@ public class Logic {
             targetUnit = size.substring(size.length() - 2);
         }
 
-        Long result = 0L;
+        long result = 0L;
         try {
             result = Long.parseLong(size.substring(0, size.length() - targetUnit.length()));
         } catch (NumberFormatException e) {

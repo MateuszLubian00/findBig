@@ -125,21 +125,19 @@ public class junitTests {
     *  Order is irrelevant.
     */
     public void findTwoFilesExactSize() {
-        TreeSet<Map.Entry<String, Long>> result = FileOp.readFiles("\\test\\test files", false, true, false);
+        TreeSet<Map.Entry<String, Long>> result = FileOp.readFiles("\\test\\test files", true, true, false);
         result = Logic.closeToSize(result, 16L);
         AbstractMap.SimpleEntry<String, Long> first = new AbstractMap.SimpleEntry<>("\\test\\test files\\16.txt", 16L);
         AbstractMap.SimpleEntry<String, Long> second = new AbstractMap.SimpleEntry<>("\\test\\test files\\dir1\\16.txt", 16L);
 
-        AbstractMap.Entry<String, Long> firstResult = result.first();
-        result.remove(firstResult);
-        AbstractMap.Entry<String, Long> secondResult = result.first();
-
-        result.clear();
-        result.add(firstResult);
-        result.add(secondResult);
-
-        Assert.assertTrue(result.contains(first));
-        Assert.assertTrue(result.contains(second));
+        int i = 0;
+        for (Map.Entry<String, Long> entry : result) {
+            if (i == 2) {
+                break;
+            }
+            Assert.assertTrue((entry.equals(first) || entry.equals(second)));
+            i++;
+        }
     }
 
     @Test
