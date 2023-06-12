@@ -56,7 +56,14 @@ public class Logic {
         String[] units;
         Long conversion;
 
-        if (size.charAt(size.length() -2) == 'i') {
+        if (size.length() == 1) {
+            // At length 1 we assume it is a number written in Bytes
+            targetUnit = "B";
+            units = unitsNB;
+            conversion = 1000L;
+            // Fixing size so the result is calculated properly
+            size = size + targetUnit;
+        } else if (size.charAt(size.length() -2) == 'i') {
             units = unitsNiB;
             conversion = 1000L;
             targetUnit = size.substring(size.length() - 3);
