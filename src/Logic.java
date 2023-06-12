@@ -56,11 +56,12 @@ public class Logic {
         String[] units;
         Long conversion;
 
-        if (size.length() == 1) {
-            // At length 1 we assume it is a number written in Bytes
-            targetUnit = "B";
+        if (size.length() == 1 || size.charAt(size.length() - 1) != 'b') {
+            // Special case if it is a single number or the units were not provided
+            // Assume it is a number written in Bytes
+            targetUnit = "b";
             units = unitsNB;
-            conversion = 1000L;
+            conversion = 1024L;
             // Fixing size so the result is calculated properly
             size = size + targetUnit;
         } else if (size.charAt(size.length() -2) == 'i') {
@@ -80,6 +81,7 @@ public class Logic {
             System.out.printf("The given size \"%s\" is malformed, exiting.", size);
             System.exit(0);
         }
+
         // Making sure the target unit was found.
         boolean found = false;
 
