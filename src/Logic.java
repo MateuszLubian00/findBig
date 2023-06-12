@@ -73,7 +73,13 @@ public class Logic {
             targetUnit = size.substring(size.length() - 2);
         }
 
-        Long result = Long.parseLong(size.substring(0, size.length() - targetUnit.length()));
+        Long result = 0L;
+        try {
+            result = Long.parseLong(size.substring(0, size.length() - targetUnit.length()));
+        } catch (NumberFormatException e) {
+            System.out.printf("The given size \"%s\" is malformed, exiting.", size);
+            System.exit(0);
+        }
         // Making sure the target unit was found.
         boolean found = false;
 
