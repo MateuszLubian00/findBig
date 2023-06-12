@@ -76,25 +76,32 @@ public class Logic {
         // Don't trust user with correct capitalization
         size = size.toLowerCase();
         String targetUnit;
-        String[] units;
-        long conversion;
+        String[] units = unitsNB;
+        long conversion = 1024L;
 
         if (size.length() == 1 || size.charAt(size.length() - 1) != 'b') {
             // Special case if it is a single number or the units were not provided
             // Assume it is a number written in Bytes
             targetUnit = "b";
-            units = unitsNB;
-            conversion = 1024L;
             // Fixing size so the result is calculated properly
             size = size + targetUnit;
-        } else if (size.charAt(size.length() -2) == 'i') {
-            units = unitsNiB;
-            conversion = 1000L;
-            targetUnit = size.substring(size.length() - 3);
         } else {
-            units = unitsNB;
-            conversion = 1024L;
-            targetUnit = size.substring(size.length() - 2);
+            char secondLast = size.charAt(size.length() - 2);
+
+            if (secondLast == 'i') {
+                units = unitsNiB;
+                conversion = 1000L;
+                targetUnit = size.substring(size.length() - 3);
+            } else {
+                try {
+                    // If this gives an error, we know target units have length of 2
+                    Long.parseLong(String.valueOf(secondLast));
+                    // We know target unit is Bytes, but just in case user wrote something else...
+                    targetUnit = size.substring(size.length() - 1);
+                } catch (NumberFormatException e) {
+                    targetUnit = size.substring(size.length() - 2);
+                }
+            }
         }
 
         long result = 0L;
