@@ -1,7 +1,5 @@
-/* This is the engine of the whole program, where most of the work will be done.
-*
-*
-*/
+/* This is the class that calls methods from FileOp class, as well as deals with outputting data to user. */
+
 import java.util.*;
 
 public class Logic {
@@ -34,7 +32,8 @@ public class Logic {
                 size = size / 1024;
             }
 
-            System.out.printf("%s - %.2f %s\n", file.getKey(), size, unitsNB[unit]);
+            // Filename - Size
+            System.out.printf("%s - %.2f %s\n", file.getKey(), size, unitsNiB[unit]);
             unit = 0;
         }
     }
@@ -71,13 +70,13 @@ public class Logic {
         return tree;
     }
 
-    /* Converts from large size to the lowest - Bytes. */
+    /* Converts from a given size to the size in Bytes. */
     private static Long convertToBytes(String size){
         // Don't trust user with correct capitalization
         size = size.toLowerCase();
         String targetUnit;
         String[] units = unitsNB;
-        long conversion = 1024L;
+        long conversion = 1000L;
 
         if (size.length() == 1 || size.charAt(size.length() - 1) != 'b') {
             // Special case if it is a single number or the units were not provided
@@ -90,11 +89,12 @@ public class Logic {
 
             if (secondLast == 'i') {
                 units = unitsNiB;
-                conversion = 1000L;
+                conversion = 1024L;
                 targetUnit = size.substring(size.length() - 3);
             } else {
                 try {
-                    // If this gives an error, we know target units have length of 2
+                    // Special case for single character unit
+                    // If this gives an error, we know target unit have length of 2
                     Long.parseLong(String.valueOf(secondLast));
                     // We know target unit is Bytes, but just in case user wrote something else...
                     targetUnit = size.substring(size.length() - 1);
@@ -115,6 +115,7 @@ public class Logic {
         // Making sure the target unit was found.
         boolean found = false;
 
+        // Conversion happens here
         for (String unit: units) {
             unit = unit.toLowerCase();
             if (unit.equals(targetUnit)) {

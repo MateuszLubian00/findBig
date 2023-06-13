@@ -1,7 +1,4 @@
-/* This part of the program interacts with files.
-*
-*
-*/
+/* This part of the program interacts with files. */
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -36,7 +33,7 @@ public class FileOp {
         }
     }
 
-    /* Reads the list of files in a dir and returns map of filenames by size.
+    /* Reads the list of files in a dir and returns set (actually map) of filenames by size.
     *  Additionally, recursively goes over subdirectories.
     */
     public static TreeSet<Map.Entry<String, Long>> readFiles(String path, boolean recursive, boolean order, boolean showHidden) {
