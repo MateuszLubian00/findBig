@@ -1,6 +1,7 @@
 /* This is the main class of this program.
 * It only parses the command line arguments and passes the work onto logic class.
 */
+
 public class Main {
 
     /* Search recursively through subdirectories. */
@@ -11,6 +12,8 @@ public class Main {
     private static boolean convert = true;
     /* Show hidden files and enter hidden directories. */
     private static boolean showHidden = false;
+    /* Limit output to this many files. */
+    private static int limit = 20;
     /* Given size to search for. */
     private static String targetSize = null;
 
@@ -20,7 +23,7 @@ public class Main {
             parseCommands(args);
         }
 
-        Logic.listFiles(recursion, descOrder, convert, showHidden, targetSize);
+        Logic.listFiles(recursion, descOrder, convert, showHidden, targetSize, limit);
 
     }
 
@@ -41,6 +44,14 @@ public class Main {
                         break;
                     case "h":
                         showHidden = true;
+                        break;
+                    case "l":
+                        try {
+                            limit = Integer.parseInt(option.substring(3));
+                        } catch (NumberFormatException e) {
+                            System.out.printf("Malformed limit number \"%s\", exiting.", option.substring(3));
+                            System.exit(0);
+                        }
                         break;
                     case "f":
                         targetSize = option.substring(3);

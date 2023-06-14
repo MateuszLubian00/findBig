@@ -9,7 +9,8 @@ This is the starting point for program. It parses the given arguments and calls 
 - `private static boolean recursion` - also search in subdirectories.
 - `private static boolean descOrder` - should the order of files be descending (by size).
 - `private static boolean convert` - if the file exceedes size of 1024 B, should the program convert to larger units.
-- `private static boolean showHidden` should the program look for files and output files that start with a dot.
+- `private static boolean showHidden` - should the program look for files and output files that start with a dot.
+- `private static int limit` - the upper limit to how many lines of data should be outputted. Defaults to 20 files.
 - `private static String targetSize` - if this variable is initialized, perform search and output only files that are close to the given size.
 
 ### Methods
@@ -41,8 +42,8 @@ This class is responsible for properly decorating and outputting data to user.
 
 ### Methods
 
-- `public static void listFiles(boolean recursion, boolean descOrder, boolean convert, boolean showHidden, String targetSize)` - main method of this class. It primarly calls the method `FileOp.readFiles` to get a list of files, and then passes it around to further work on it or output it.
-- `private static void printFiles(TreeSet<Map.Entry<String, Long>> filesMap, boolean convert)` - prints out the data in a format `Filename with path - Size with 2 decimal spaces`. Additionally converts Byte unit found in the list to larger IEC units.
+- `public static void listFiles(boolean recursion, boolean descOrder, boolean convert, boolean showHidden, String targetSize, int limit)` - main method of this class. It primarly calls the method `FileOp.readFiles` to get a list of files, and then passes it around to further work on it or output it.
+- `private static void printFiles(TreeSet<Map.Entry<String, Long>> filesMap, boolean convert, int limit)` - prints out the data in a format `Filename with path - Size with 2 decimal spaces`. Additionally converts Byte unit found in the list to larger IEC units.
 - `public static TreeSet<Map.Entry<String, Long>> closeToSize(TreeSet<Map.Entry<String, Long>> filesMap, Long target)` - creates a new `TreeSet` with ordering based on distance to target, then it adds all items from the passed on `TreeSet` as long as they are within the search bounds.
 - `private static Long convertToBytes(String size)` - takes in a string that is supposed to represent a size with specified units and returns that size in Bytes.
 
