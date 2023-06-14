@@ -9,7 +9,7 @@ public class Logic {
     private static final String[] unitsNiB = {"B", "KiB", "MiB", "GiB", "TiB"};
 
     /* Creates one map of files. */
-    public static void listFiles(boolean recursion, boolean descOrder, boolean convert, boolean showHidden, String targetSize) {
+    public static void listFiles(boolean recursion, boolean descOrder, boolean convert, boolean showHidden, String targetSize, int limit) {
         TreeSet<Map.Entry<String, Long>> filesMap;
         filesMap = FileOp.readFiles("", recursion, descOrder, showHidden);
 
@@ -18,14 +18,21 @@ public class Logic {
            filesMap = closeToSize(filesMap, bytes);
         }
 
-        printFiles(filesMap, convert);
+        printFiles(filesMap, convert, limit);
     }
 
     /* Print out the list of files. */
-    private static void printFiles(TreeSet<Map.Entry<String, Long>> filesMap, boolean convert) {
-        int unit = 0;
+    private static void printFiles(TreeSet<Map.Entry<String, Long>> filesMap, boolean convert, int limit) {
+        int unit = 0, count = 0;
         float size;
+
         for (Map.Entry<String, Long> file : filesMap) {
+
+            if (count == limit) {
+                break;
+            }
+            count++;
+
             size = Float.parseFloat(file.getValue().toString());
             while (convert && size >= 1024) {
                 unit++;
